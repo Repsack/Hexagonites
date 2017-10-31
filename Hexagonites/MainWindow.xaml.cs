@@ -17,6 +17,7 @@ namespace Hexagonites
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
+    /// hehe
     /// </summary>
     public partial class MainWindow : Window
     {

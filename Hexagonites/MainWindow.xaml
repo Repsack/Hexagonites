@@ -5,8 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Hexagonites"
         mc:Ignorable="d"
-        Title="Hexagonites" Height="350" Width="200">
+        Title="Hexagonites" Width="1280" Height="720">
     <Grid>
-        
+        <TextBlock Name="textBlock1" Background="#FFFFFF">
+          <Bold>TextBlock</Bold> is designed to be <Italic>lightweight</Italic>,
+          and is geared specifically at integrating <Italic>small</Italic> portions
+          of flow content into a UI.
+        </TextBlock>
     </Grid>
 </Window>
