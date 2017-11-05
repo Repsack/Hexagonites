@@ -5,12 +5,40 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Hexagonites"
         mc:Ignorable="d"
+        ResizeMode="NoResize"
         Title="Hexagonites" Width="1280" Height="720">
     <Grid>
-        <TextBlock Name="textBlock1" Background="#FFFFFF">
-          <Bold>TextBlock</Bold> is designed to be <Italic>lightweight</Italic>,
-          and is geared specifically at integrating <Italic>small</Italic> portions
-          of flow content into a UI.
-        </TextBlock>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="15*"/>
+            <RowDefinition Height="4*"/>
+        </Grid.RowDefinitions>
+
+        <ToolBar Grid.Row="0">
+            <MenuItem Header="_File"/>
+            <MenuItem Header="_Options"/>
+            <MenuItem Header="_Help"/>
+        </ToolBar>
+        <!--<Rectangle Fill="#666" Grid.Row="1"/>-->
+        <Canvas Background="#777" Grid.Row="1">
+            <!-- Draws a triangle with a blue interior. -->
+            <Polygon Points="10,110 60,10 110,110" Fill="Blue" />
+
+            <!-- Draws a triangle with a blue interior and a black outline. 
+                The Canvas.Top setting moves the Polygon down 150 pixels. -->
+            <Polygon Points="10,110 60,10 110,110" Fill="Blue"
+                Stroke="Black" StrokeThickness="4" Canvas.Top="150" />
+
+            <!-- Draws another triangle with a blue interior.
+                The Canvas.Left setting moves the Polygon 150 pixels to the right. -->
+            <Polygon Points="10,110 110,110 110,10" Fill="Blue" Canvas.Left="150" />
+
+            <!-- Draws a triangle with a black outline. 
+            The Canvas.Left and Canvas.Top settings move 
+            the Polygon down 150 pixels and 150 pixels to the right.-->
+            <Polygon Points="10,110 110,110 110,10"
+            Stroke="Black" StrokeThickness="4" Canvas.Left="150" Canvas.Top="150" />
+        </Canvas>
+        <Rectangle Fill="#DDD" Grid.Row="2"/>
     </Grid>
 </Window>
