@@ -9,9 +9,9 @@
         Title="Hexagonites" Width="1280" Height="720">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="15*"/>
-            <RowDefinition Height="4*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="259*"/>
+            <RowDefinition Height="69*"/>
         </Grid.RowDefinitions>
 
         <ToolBar Grid.Row="0">
@@ -20,24 +20,15 @@
             <MenuItem Header="_Help"/>
         </ToolBar>
         <!--<Rectangle Fill="#666" Grid.Row="1"/>-->
-        <Canvas Background="#777" Grid.Row="1">
-            <!-- Draws a triangle with a blue interior. -->
-            <Polygon Points="10,110 60,10 110,110" Fill="Blue" />
+        <Canvas x:Name="theCanvas" Background="#777" Grid.Row="1" MouseLeftButtonDown="selectHex">
+            <TextBlock x:Name="centerLabel" Canvas.Left="10" Canvas.Top="10"
+                       Foreground="Yellow" Text="cCenter: "/>
 
-            <!-- Draws a triangle with a blue interior and a black outline. 
-                The Canvas.Top setting moves the Polygon down 150 pixels. -->
-            <Polygon Points="10,110 60,10 110,110" Fill="Blue"
-                Stroke="Black" StrokeThickness="4" Canvas.Top="150" />
 
-            <!-- Draws another triangle with a blue interior.
-                The Canvas.Left setting moves the Polygon 150 pixels to the right. -->
-            <Polygon Points="10,110 110,110 110,10" Fill="Blue" Canvas.Left="150" />
-
-            <!-- Draws a triangle with a black outline. 
-            The Canvas.Left and Canvas.Top settings move 
-            the Polygon down 150 pixels and 150 pixels to the right.-->
-            <Polygon Points="10,110 110,110 110,10"
-            Stroke="Black" StrokeThickness="4" Canvas.Left="150" Canvas.Top="150" />
+            <!-- An attempt to create an actual hexagon now! -->
+            <Polygon x:Name="myPol1" Fill="White" Stroke="Black" StrokeThickness="3" Canvas.Left="150" Canvas.Top="150" MouseEnter="highlightHex" MouseLeave="unhighlightHex" />
+            <Polygon x:Name="myPol2" Fill="White" Stroke="Black" StrokeThickness="3" Canvas.Left="150" Canvas.Top="150" MouseEnter="highlightHex" MouseLeave="unhighlightHex" />
+            <Polygon x:Name="myPol3" Fill="White" Stroke="Black" StrokeThickness="3" Canvas.Left="150" Canvas.Top="150" MouseEnter="highlightHex" MouseLeave="unhighlightHex" />
         </Canvas>
         <Rectangle Fill="#DDD" Grid.Row="2"/>
     </Grid>
