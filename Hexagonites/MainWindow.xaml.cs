@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using QuickGraph;
 
 namespace Hexagonites
 {
@@ -21,6 +22,9 @@ namespace Hexagonites
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        BidirectionalGraph<Hex,HexEdge> myHexGraph; //NOT SETUP CORRECLY JUST YET
+
         Hex myTestHex1;
         Hex myTestHex2;
         Hex myTestHex3;
