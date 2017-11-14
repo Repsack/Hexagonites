@@ -7,6 +7,9 @@ namespace Hexagonites
 {
     class Hex
     {
+        //Can a delegate here grab the event that fires from a Polygon that has the same name..?
+
+        public string name { get; set; }
         public double PI = System.Math.PI;
         public Point center;
         public PointCollection corners;
@@ -33,11 +36,7 @@ namespace Hexagonites
             corners = new PointCollection();
             for (int i = 0; i < 6; i++)
             {
-                /*
-                var angle_deg = 60 * i   + 30
-                var angle_rad = PI / 180 * angle_deg
-                    return Point(center.x + size * cos(angle_rad), center.y + size * sin(angle_rad))
-                 */
+                
                 double deg = 60 * i + 30;
                 double rad = PI / 180 * deg;
                 Point ptoadd = new Point(center.X + scale * System.Math.Cos(rad),
