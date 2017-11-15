@@ -32,6 +32,7 @@ namespace Hexagonites
         Map map;
         private bool firstPlaced;
         double scale;
+        Point last;
 
         public MainWindow()
         {
@@ -48,7 +49,14 @@ namespace Hexagonites
             int index;
             int.TryParse(map.curHighlightPol.Name.Substring(1), out index);
             map.curHighlightHex = map.hexes[index];
-            map.curHighlightPol.Fill = Brushes.Aqua;
+            if (!map.curHighlightHex.empty)
+            {
+                map.curHighlightPol.Fill = Brushes.Aqua;
+            }
+            else
+            {
+                map.curHighlightPol.Fill = (Brush)new BrushConverter().ConvertFromString("#555");
+            }
             map.polHighlighted = true;
         }
 
@@ -58,9 +66,14 @@ namespace Hexagonites
             Polygon p = (Polygon)sender;
             if (p != map.curSelectedPol || !map.PolSelected)
             {
-                //Console.WriteLine("Name of polygon: " + map.curPol.Name);
-                //Console.WriteLine("Color of polygon: " + map.curPol.Fill.ToString());
-                map.curHighlightPol.Fill = Brushes.White;
+                if (!map.curHighlightHex.empty)
+                {
+                    map.curHighlightPol.Fill = Brushes.White;
+                }
+                else
+                {
+                    map.curHighlightPol.Fill = (Brush)new BrushConverter().ConvertFromString("#777");
+                }
             }
             else
             {
@@ -77,7 +90,6 @@ namespace Hexagonites
             }
             else
             {
-                Console.WriteLine("CanvasLeftDown called not-first time");
                 if (map.polHighlighted)
                 {
                     map.curSelectedPol = map.curHighlightPol;
@@ -98,6 +110,16 @@ namespace Hexagonites
                     }
                 }
             }
+        }
+
+        private void CanvasLeftUp(object sender, MouseButtonEventArgs e)
+        {
+            
+        }
+
+        private void CanvasMouseMove(object sender, MouseEventArgs e)
+        {
+            
         }
     }
 }

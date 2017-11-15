@@ -19,10 +19,8 @@
             <MenuItem Header="_Options"/>
             <MenuItem Header="_Help"/>
         </ToolBar>
-        <!--<Rectangle Fill="#666" Grid.Row="1"/>-->
-        <Canvas x:Name="theCanvas" Background="#777" Grid.Row="1" MouseLeftButtonDown="CanvasLeftDown">
-            <TextBlock x:Name="centerLabel" Canvas.Left="10" Canvas.Top="10"
-                       Foreground="Yellow" Text="cCenter: "/>
+        <Canvas x:Name="theCanvas" Background="#777" Grid.Row="1" MouseLeftButtonDown="CanvasLeftDown" MouseLeftButtonUp="CanvasLeftUp" MouseMove="CanvasMouseMove">
+            
         </Canvas>
         <Rectangle Fill="#DDD" Grid.Row="2"/>
     </Grid>
