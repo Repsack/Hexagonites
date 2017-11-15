@@ -30,8 +30,6 @@ namespace Hexagonites
         //BidirectionalGraph<Hex,HexEdge> myHexGraph; //NOT SETUP CORRECLY JUST YET
 
         Map map;
-        Hex curHex;
-        Polygon curPol;
         private bool firstPlaced;
         double scale;
 
@@ -39,57 +37,35 @@ namespace Hexagonites
         {
             InitializeComponent();
             scale = 30;
-            map = new Map(theCanvas,scale);
+            map = new Map(theCanvas,scale, highlightHexagon, unhighlightHexagon);
         }
 
         private void highlightHexagon(object sender, MouseEventArgs e)
         {
-            /*
-            //double the stroke value of the currently highlighted hex            
-            curPol = (Polygon)sender;
-            curPol.StrokeThickness *= 2;
-            if (curPol.Name == "myPol1") //WROOOOOOOOONG!!!
-            {
-                curHex = myTestHex1;
-            }
-            else if(curPol.Name == "myPol2")
-            {
-                curHex = myTestHex2;
-            }
-            else
-            {
-                curHex = myTestHex3;
-            }
-            curHex.highlighted = true;
-            */
+            map.curHighlightPol = (Polygon)sender;
+            //Console.WriteLine("Name of polygon: " + map.curPol.Name);
+            //Console.WriteLine("Color of polygon: " + map.curPol.Fill.ToString());
+            int index;
+            int.TryParse(map.curHighlightPol.Name.Substring(1), out index);
+            map.curHighlightHex = map.hexes[index];
+            map.curHighlightPol.Fill = Brushes.Aqua;
+            map.polHighlighted = true;
         }
 
         private void unhighlightHexagon(object sender, MouseEventArgs e)
         {
-            /*
-            curPol.StrokeThickness /= 2;
-            curHex.highlighted=false;
-            /*
-            THIS curHex = null; is BAAD!! there is no way of telling if this fires AFTER another hex just said
-            curHex = myTestHex.. might unselect it all the time
-            */
-            //curHex = null;
-            //curPol = null;
-            
-        }
-
-        private void selectHexagon(object sender, MouseButtonEventArgs e)
-        {
-            /*
-            if (curHex.highlighted)
+            map.polHighlighted = false;
+            Polygon p = (Polygon)sender;
+            if (p != map.curSelectedPol || !map.PolSelected)
             {
-                centerLabel.Text = "Center: " + curHex.center.ToString();
+                //Console.WriteLine("Name of polygon: " + map.curPol.Name);
+                //Console.WriteLine("Color of polygon: " + map.curPol.Fill.ToString());
+                map.curHighlightPol.Fill = Brushes.White;
             }
             else
             {
-                centerLabel.Text = "center: ";
+                map.curHighlightPol.Fill = Brushes.Blue;
             }
-            */
         }
 
         private void CanvasLeftDown(object sender, MouseButtonEventArgs e)
@@ -101,9 +77,27 @@ namespace Hexagonites
             }
             else
             {
-                //map."SOMETHING"();
+                Console.WriteLine("CanvasLeftDown called not-first time");
+                if (map.polHighlighted)
+                {
+                    map.curSelectedPol = map.curHighlightPol;
+                    map.curSelectedHex = map.curHighlightHex;
+                    map.curSelectedPol.Fill = Brushes.Blue;
+                    map.PolSelected = true;
+                    if (map.curSelectedPol == map.curHighlightPol)
+                    {
+                        map.curSelectedPol.Fill = Brushes.Aqua;
+                    }
+                }
+                else
+                {
+                    if (map.curHighlightPol != null)
+                    {
+                        map.curHighlightPol.Fill = Brushes.White;
+                        map.PolSelected = false;
+                    }
+                }
             }
-            
         }
     }
 }

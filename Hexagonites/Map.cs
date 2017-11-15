@@ -23,17 +23,28 @@ namespace Hexagonites
     class Map
     {
         private List<Polygon> polygons;
-        private List<Hex> hexes;
+        public List<Hex> hexes;
         private Graph graph;
+        public Polygon curHighlightPol, curSelectedPol;
+        public Hex curHighlightHex,curSelectedHex;
         private Canvas theCanvas;
         private double scale;
         private double strokeThickness;
+        private Action<object, MouseEventArgs> highlightHexagon, unhighlightHexagon;
+        internal bool polHighlighted;
 
-        public Map(Canvas theCanvas, double scale)
+        public bool PolSelected { get; internal set; }
+
+        public Map(Canvas theCanvas, double scale, Action<object, 
+            MouseEventArgs> highlightHexagon, Action<object, MouseEventArgs> unhighlightHexagon)
         {
             this.theCanvas = theCanvas;
             this.scale = scale;
+            this.highlightHexagon += highlightHexagon;
+            this.unhighlightHexagon += unhighlightHexagon;
             strokeThickness = 2; //arbitrary choice
+            polHighlighted = false;
+            PolSelected = false;
             polygons = new List<Polygon>();
             hexes = new List<Hex>();
             graph = new Graph(6);
@@ -81,7 +92,7 @@ namespace Hexagonites
             //Method for creating new Hex objects to the hexes list.
             //index is used to point to the hex in the center of the new neighbors to-be
             //the two sets are used to derive which neighbors must be made and where
-            throw new NotImplementedException();
+            
         }
 
         public void placeFirst(object sender, MouseEventArgs mouse)
@@ -92,13 +103,15 @@ namespace Hexagonites
             Hex h = new Hex(new Point(0, 0), scale, "0"); //needs a point for the makeCorners method
             h.empty = false; //Means the hex is an actual hex and not just a potential hex
             p.Name = "s0"; //using "s0" instead of "0" because just "0" is forbidden 
-            p.Fill = Brushes.White; //subject to change, depending on hexagon type
+            p.Fill = Brushes.Red; //subject to change, depending on hexagon type
             p.Stroke = Brushes.Black; //subject to change, depending on hexagon type
             p.StrokeThickness = strokeThickness; //arbitrary, but should probably be the same for ALL hexes
             p.RenderTransform = new TranslateTransform(mouse.GetPosition(theCanvas).X, mouse.GetPosition(theCanvas).Y);
             p.HorizontalAlignment = 0; //means Left as defined in the enum of HorizontalAlignment
             p.VerticalAlignment = 0; //means Top as defined in the enum of VerticalAlignment
             p.Points = h.corners; //The polygon can now receive the corner points generated in the hex object
+            p.MouseEnter += new MouseEventHandler(highlightHexagon);
+            p.MouseLeave += new MouseEventHandler(unhighlightHexagon);
             theCanvas.Children.Add(p); //give the polygon to the canvas for rendering
 
             //These next entries all happen at the same index: 0
