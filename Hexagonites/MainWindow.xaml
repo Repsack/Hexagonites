@@ -20,17 +20,9 @@
             <MenuItem Header="_Help"/>
         </ToolBar>
         <!--<Rectangle Fill="#666" Grid.Row="1"/>-->
-        <Canvas x:Name="theCanvas" Background="#777" Grid.Row="1" MouseLeftButtonDown="selectHex">
+        <Canvas x:Name="theCanvas" Background="#777" Grid.Row="1" MouseLeftButtonDown="CanvasLeftDown">
             <TextBlock x:Name="centerLabel" Canvas.Left="10" Canvas.Top="10"
                        Foreground="Yellow" Text="cCenter: "/>
-
-
-            <!-- An attempt to create an actual hexagon now! -->
-            
-            <Polygon x:Name="myPol1" Fill="White" Stroke="Black" StrokeThickness="3" Canvas.Left="150" Canvas.Top="150" MouseEnter="highlightHex" MouseLeave="unhighlightHex" />
-            <Polygon x:Name="myPol2" Fill="White" Stroke="Black" StrokeThickness="3" Canvas.Left="150" Canvas.Top="150" MouseEnter="highlightHex" MouseLeave="unhighlightHex" />
-            <Polygon x:Name="myPol3" Fill="White" Stroke="Black" StrokeThickness="3" Canvas.Left="150" Canvas.Top="150" MouseEnter="highlightHex" MouseLeave="unhighlightHex" />
-            
         </Canvas>
         <Rectangle Fill="#DDD" Grid.Row="2"/>
     </Grid>

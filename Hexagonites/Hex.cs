@@ -25,10 +25,11 @@ namespace Hexagonites
                 makeCorners();
             }
         }
-        public Hex(Point center, double scale)
+        public Hex(Point center, double scale, string name)
         {
             this.center = center;
             this.scale = scale;
+            this.name = name;
             makeCorners();
         }
         private void makeCorners()

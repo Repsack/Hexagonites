@@ -27,29 +27,26 @@ namespace Hexagonites
         IMutableEdgeListGraph defines methods to add and remove edges
         IMutableVertexAndEdgeListGraph merges the two above concepts, 
         */
-        BidirectionalGraph<Hex,HexEdge> myHexGraph; //NOT SETUP CORRECLY JUST YET
+        //BidirectionalGraph<Hex,HexEdge> myHexGraph; //NOT SETUP CORRECLY JUST YET
 
-        Hex myTestHex1;
-        Hex myTestHex2;
-        Hex myTestHex3;
+        List<Hex> hexes;
+        List<Polygon> polygons;
         Hex curHex;
         Polygon curPol;
+        private bool firstPlaced;
+        double scale;
+
         public MainWindow()
         {
+            hexes = new List<Hex>();
+            polygons = new List<Polygon>();
             InitializeComponent();
-            double scale = 30;
-            myTestHex1 = new Hex(new Point(0,0),scale);
-            myTestHex2 = new Hex(new Point(Math.Sqrt(3)*scale,0), scale);
-            myTestHex3 = new Hex(new Point(Math.Sqrt(3) * scale / 2, (scale/2)*3), scale);
-            myPol1.Points = myTestHex1.corners;
-            myPol2.Points = myTestHex2.corners;
-            myPol3.Points = myTestHex3.corners;
-            curHex = myTestHex1;
-            curPol = myPol1;
+            scale = 30;
         }
 
         private void highlightHex(object sender, MouseEventArgs e)
         {
+            /*
             //double the stroke value of the currently highlighted hex            
             curPol = (Polygon)sender;
             curPol.StrokeThickness *= 2;
@@ -66,10 +63,12 @@ namespace Hexagonites
                 curHex = myTestHex3;
             }
             curHex.highlighted = true;
+            */
         }
 
         private void unhighlightHex(object sender, MouseEventArgs e)
         {
+            /*
             curPol.StrokeThickness /= 2;
             curHex.highlighted=false;
             /*
@@ -78,6 +77,7 @@ namespace Hexagonites
             */
             //curHex = null;
             //curPol = null;
+            
         }
 
         private void selectHex(object sender, MouseButtonEventArgs e)
@@ -89,6 +89,26 @@ namespace Hexagonites
             else
             {
                 centerLabel.Text = "center: ";
+            }
+        }
+
+        private void CanvasLeftDown(object sender, MouseButtonEventArgs e)
+        {
+            if (!firstPlaced)
+            {
+
+                Polygon p = new Polygon();
+                Hex h = new Hex(new Point(0,0),scale,"0");
+                p.Name = "s0";
+                p.Fill = Brushes.White;
+                p.Stroke = Brushes.Black;
+                p.StrokeThickness = 2;
+                p.RenderTransform = new TranslateTransform(e.GetPosition(theCanvas).X,e.GetPosition(theCanvas).Y);
+                p.HorizontalAlignment = 0; //means Left as defined in the enum of HorizontalAlignment
+                p.VerticalAlignment = 0; //means Top as defined in the enum of VerticalAlignment
+                p.Points = h.corners;
+                theCanvas.Children.Add(p);
+                firstPlaced = true;
             }
         }
     }
