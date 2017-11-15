@@ -14,6 +14,8 @@ namespace Hexagonites
         public Point center;
         public PointCollection corners;
         private double sscale;
+        internal bool empty;
+
         public bool highlighted { get; set; }
 
         public double scale
@@ -30,12 +32,14 @@ namespace Hexagonites
             this.center = center;
             this.scale = scale;
             this.name = name;
+            this.empty = true;
             makeCorners();
         }
 
         //These cornerpoints are only needed for the visual side of things
-        //Sadly the Polygon class is sealed, and so these points must be generated
-        //here before being sent to the corresponding Polygon for rendering
+        //Sadly the Polygon class is sealed and cannot make them by itself, 
+        //and so these points must be generated here
+        //before being sent to the corresponding Polygon for rendering
         private void makeCorners()
         {
             corners = new PointCollection();

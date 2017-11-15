@@ -29,9 +29,7 @@ namespace Hexagonites
         */
         //BidirectionalGraph<Hex,HexEdge> myHexGraph; //NOT SETUP CORRECLY JUST YET
 
-        List<Hex> hexes;
-        List<Polygon> polygons;
-        Graph graph;
+        Map map;
         Hex curHex;
         Polygon curPol;
         private bool firstPlaced;
@@ -39,13 +37,12 @@ namespace Hexagonites
 
         public MainWindow()
         {
-            hexes = new List<Hex>();
-            polygons = new List<Polygon>();
             InitializeComponent();
             scale = 30;
+            map = new Map(theCanvas,scale);
         }
 
-        private void highlightHex(object sender, MouseEventArgs e)
+        private void highlightHexagon(object sender, MouseEventArgs e)
         {
             /*
             //double the stroke value of the currently highlighted hex            
@@ -67,7 +64,7 @@ namespace Hexagonites
             */
         }
 
-        private void unhighlightHex(object sender, MouseEventArgs e)
+        private void unhighlightHexagon(object sender, MouseEventArgs e)
         {
             /*
             curPol.StrokeThickness /= 2;
@@ -81,9 +78,10 @@ namespace Hexagonites
             
         }
 
-        private void selectHex(object sender, MouseButtonEventArgs e)
+        private void selectHexagon(object sender, MouseButtonEventArgs e)
         {
-            if(curHex.highlighted)
+            /*
+            if (curHex.highlighted)
             {
                 centerLabel.Text = "Center: " + curHex.center.ToString();
             }
@@ -91,49 +89,21 @@ namespace Hexagonites
             {
                 centerLabel.Text = "center: ";
             }
+            */
         }
 
         private void CanvasLeftDown(object sender, MouseButtonEventArgs e)
         {
             if (!firstPlaced)
             {
-
-                Polygon p = new Polygon();
-                Hex h = new Hex(new Point(0, 0), scale, "0");
-                p.Name = "s0";
-                p.Fill = Brushes.White;
-                p.Stroke = Brushes.Black;
-                p.StrokeThickness = 2;
-                p.RenderTransform = new TranslateTransform(e.GetPosition(theCanvas).X, e.GetPosition(theCanvas).Y);
-                p.HorizontalAlignment = 0; //means Left as defined in the enum of HorizontalAlignment
-                p.VerticalAlignment = 0; //means Top as defined in the enum of VerticalAlignment
-                p.Points = h.corners;
-                theCanvas.Children.Add(p);
-
-                polygons.Add(p);
-                hexes.Add(h);
-                graph.Add();
-                generateNeighbors(0);
-                //Here is where the rest of the Hex+Polygons must be created and made:
-
+                map.placeFirst(sender,e);
                 firstPlaced = true;
             }
             else
             {
-
+                //map."SOMETHING"();
             }
             
-        }
-
-        private void generateNeighbors(int index)
-        {
-            //This method is responsible for making the List<Polygon>, the List<Hex> and
-            //the graph object make their own entries, aswell as passing all the
-            //relevant information in between them
-            int oldSize, newSize;
-            //The graph need no information from the other lists to correctly create new entries
-            graph.generateNeighbors(index,out oldSize, out newSize); 
-
         }
     }
 }

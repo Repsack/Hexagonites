@@ -39,11 +39,6 @@ namespace Hexagonites
             graph.Add(new List<Point>());
         }
 
-        internal void generateNeighbors(int index)
-        {
-            
-        }
-
         internal void generateNeighbors(int index, out int oldSize, out int newSize)
         {
             //This part here is only responsible for creating the neighbors as far as graph-relations go
