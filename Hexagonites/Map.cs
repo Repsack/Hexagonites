@@ -53,10 +53,35 @@ namespace Hexagonites
             //In terms of compas directions, here is the directions of the 6 neighbors in order:
             //E, SE, SW, W, NW, NE
 
-            int oldSize, newSize;
-            //The graph need no information from the other lists to correctly create new entries
-            graph.generateNeighbors(index, out oldSize, out newSize);
+            //Unless the this is the first time it is called, the relevant index represents
+            //a hexagon that ALREADY have SOME neighbors! This call just generates new empty
+            //hexagons and edges between them, aswell as edges to already existing hexes
 
+            List<Point> oldSet, newSet;
+            //The graph need no information from the other lists to correctly create new entries
+            graph.generateNeighbors(index, out oldSet, out newSet);
+
+            //The Hex objects must generate their own points, and so they each need a centerpoint.
+            //The centerpoints needed, are made in reference to the centerpoint of the hex at "index".
+            //They ALSO depend on which of them already exist aswell as where they are relative to the center.
+            //The difference between oldSet and newSet should show which hexes do not exist yet,
+            //aswell as their position
+            generateHexNeighbors(index, oldSet, newSet);
+
+            //The final task when creating neighbors is to make the Polygon objects,
+            //and place them correctly in the polygons list. 
+            //Each Polygon needs a set of corners from the corresponding Hex object
+            //and possibly also some type information that affects the fill color and more
+            //TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+        }
+
+        private void generateHexNeighbors(int index, List<Point> oldSet, List<Point> newSet)
+        {
+            //Method for creating new Hex objects to the hexes list.
+            //index is used to point to the hex in the center of the new neighbors to-be
+            //the two sets are used to derive which neighbors must be made and where
+            throw new NotImplementedException();
         }
 
         public void placeFirst(object sender, MouseEventArgs mouse)

@@ -39,20 +39,31 @@ namespace Hexagonites
             graph.Add(new List<Point>());
         }
 
-        internal void generateNeighbors(int index, out int oldSize, out int newSize)
+        internal void generateNeighbors(int index, out List<Point> oldSet, out List<Point> newSet)
         {
             //This part here is only responsible for creating the neighbors as far as graph-relations go
             //This object will make new Lists of points for traversal
             //it WILL NOT make new Polygon- or Hex objects anywhere.
 
-            //the current size is what will later be the "old" size
-            oldSize = graph.Count;
+            //There will likely already be SOME neighbors written down for the entry at "index",
+
+
+            //the current list of Points at "index" is what will later be the "oldSet"
+            oldSet = new List<Point>();
+            foreach(Point p in graph[index])
+            {
+                oldSet.Add(p); //Will this be a copy or a reference...??
+            }
 
             //Here we actually create neighbors:
-            //TODO!!!
+            //TODO!!!!!!!!!!!!!!!!!!!!!!!
 
             //After the work, the newSize is set
-            newSize = graph.Count;
+            newSet = new List<Point>();
+            foreach (Point p in graph[index])
+            {
+                oldSet.Add(p); //Will this be a copy or a reference...??
+            }
         }
     }
 }
