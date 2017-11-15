@@ -32,6 +32,10 @@ namespace Hexagonites
             this.name = name;
             makeCorners();
         }
+
+        //These cornerpoints are only needed for the visual side of things
+        //Sadly the Polygon class is sealed, and so these points must be generated
+        //here before being sent to the corresponding Polygon for rendering
         private void makeCorners()
         {
             corners = new PointCollection();

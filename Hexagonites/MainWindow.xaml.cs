@@ -31,6 +31,7 @@ namespace Hexagonites
 
         List<Hex> hexes;
         List<Polygon> polygons;
+        Graph graph;
         Hex curHex;
         Polygon curPol;
         private bool firstPlaced;
@@ -98,18 +99,41 @@ namespace Hexagonites
             {
 
                 Polygon p = new Polygon();
-                Hex h = new Hex(new Point(0,0),scale,"0");
+                Hex h = new Hex(new Point(0, 0), scale, "0");
                 p.Name = "s0";
                 p.Fill = Brushes.White;
                 p.Stroke = Brushes.Black;
                 p.StrokeThickness = 2;
-                p.RenderTransform = new TranslateTransform(e.GetPosition(theCanvas).X,e.GetPosition(theCanvas).Y);
+                p.RenderTransform = new TranslateTransform(e.GetPosition(theCanvas).X, e.GetPosition(theCanvas).Y);
                 p.HorizontalAlignment = 0; //means Left as defined in the enum of HorizontalAlignment
                 p.VerticalAlignment = 0; //means Top as defined in the enum of VerticalAlignment
                 p.Points = h.corners;
                 theCanvas.Children.Add(p);
+
+                polygons.Add(p);
+                hexes.Add(h);
+                graph.Add();
+                generateNeighbors(0);
+                //Here is where the rest of the Hex+Polygons must be created and made:
+
                 firstPlaced = true;
             }
+            else
+            {
+
+            }
+            
+        }
+
+        private void generateNeighbors(int index)
+        {
+            //This method is responsible for making the List<Polygon>, the List<Hex> and
+            //the graph object make their own entries, aswell as passing all the
+            //relevant information in between them
+            int oldSize, newSize;
+            //The graph need no information from the other lists to correctly create new entries
+            graph.generateNeighbors(index,out oldSize, out newSize); 
+
         }
     }
 }
