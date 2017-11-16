@@ -70,7 +70,7 @@ namespace Hexagonites
 
             List<Point> oldSet, newSet;
             //The graph need no information from the other lists to correctly create new entries
-            graph.generateNeighbors(index, out oldSet, out newSet);
+            graph.generateNeighborEdges(index, out oldSet, out newSet);
 
             //The Hex objects must generate their own points, and so they each need a centerpoint.
             //The centerpoints needed, are made in reference to the centerpoint of the hex at "index".
@@ -117,10 +117,9 @@ namespace Hexagonites
             //These next entries all happen at the same index: 0
             polygons.Add(p); //we must keep the same reference here, in case we later must change the visuals
             hexes.Add(h); //the Hex data is added to the list
-            graph.Add(); //This adds the first entry into the graph
+            graph.AddInitial(); //This adds the first entry into the graph
             generateNeighbors(0); //in a separate operation, the neighbors for the first entry are made
-
-            //Here is where the rest of the Hex+Polygons must be created and made, after the neighbors are created
+            
         }
     }
 }
