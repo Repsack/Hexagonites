@@ -63,8 +63,13 @@ namespace Hexagonites
             }
         }
 
-        internal void generateNeighborEdges(int index, out List<Point> oldSet, out List<Point> newSet)
+        internal void generateNeighborEdges(int index, out List<int> updatedIndexes)
         {
+            List<Point> oldSet, newSet;
+            oldSet = new List<Point>();
+            newSet = new List<Point>();
+            updatedIndexes = new List<int>();
+
             int newIndex;
             double oldY;
             //This part here is only responsible for creating the neighbors as far as graph-relations go
@@ -122,6 +127,15 @@ namespace Hexagonites
             foreach (Point p in graph[index])
             {
                 newSet.Add(new Point(p.X, p.Y)); //Just a copy
+            }
+
+            //List<int> updatedIndexes = new List<int>();
+            for (int i = 0; i < 6; i++)
+            {
+                if (oldSet[i].X != newSet[i].X && oldSet[i].X == -1) //means a new hex should be made
+                { 
+                    updatedIndexes.Add(i); //add index of the soon new hex
+                }
             }
         }
 
