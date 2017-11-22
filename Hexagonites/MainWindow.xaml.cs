@@ -32,7 +32,6 @@ namespace Hexagonites
         Map map;
         private bool firstPlaced;
         double scale;
-        Point last;
 
         public MainWindow()
         {
@@ -62,7 +61,7 @@ namespace Hexagonites
 
         private void unhighlightHexagon(object sender, MouseEventArgs e)
         {
-            map.polHighlighted = false;
+            //map.polHighlighted = false; //DANGEROUS, might be called after "= true" in the highlight method
             Polygon p = (Polygon)sender;
             if (p != map.curSelectedPol || !map.PolSelected)
             {
@@ -90,24 +89,13 @@ namespace Hexagonites
             }
             else
             {
-                if (map.polHighlighted)
+                int index;
+                int.TryParse(map.curHighlightHex.name, out index);
+                if (map.hexes[index].empty)
                 {
-                    map.curSelectedPol = map.curHighlightPol;
-                    map.curSelectedHex = map.curHighlightHex;
-                    map.curSelectedPol.Fill = Brushes.Blue;
-                    map.PolSelected = true;
-                    if (map.curSelectedPol == map.curHighlightPol)
-                    {
-                        map.curSelectedPol.Fill = Brushes.Aqua;
-                    }
-                }
-                else
-                {
-                    if (map.curHighlightPol != null)
-                    {
-                        map.curHighlightPol.Fill = Brushes.White;
-                        map.PolSelected = false;
-                    }
+                    map.hexes[index].empty = false;
+                    map.polygons[index].Fill = Brushes.White;
+                    map.generateNeighbors(index);
                 }
             }
         }
