@@ -14,13 +14,10 @@ namespace Hexagonites
         public Point center;
         public PointCollection corners;
         private double sscale;
-        internal bool uninitialized; //starts as true, means this hex does not reeeally exist yet
-        internal bool abyss; //used to mimic an uninitialized hex, if there is a need for them
+        public bool uninitialized; //starts as true, means this hex does not reeeally exist yet
+        public bool abyss; //used to mimic an uninitialized hex, if there is a need for them
         public Brush curBrush;
-        
-
         public bool highlighted { get; set; }
-
         public double scale
         {
             get { return sscale; }
@@ -39,6 +36,13 @@ namespace Hexagonites
             makeCorners();
             curBrush = Brushes.White;
 
+        }
+
+        public Hex(Point center, double scale, string name, bool uninitialized, bool abyss)
+            : this(center,scale,name)
+        {
+            this.uninitialized = uninitialized;
+            this.abyss = abyss;
         }
 
         //These cornerpoints are only needed for the visual side of things

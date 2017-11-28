@@ -26,6 +26,7 @@ namespace Hexagonites
         public List<Hex> hexes;
         private Graph graph;
         TranslateTransform initTransform;
+        Point mouseInit;
         public Polygon curHighlightPol, curSelectedPol;
         public Hex curHighlightHex,curSelectedHex;
         Marker marker;
@@ -52,6 +53,15 @@ namespace Hexagonites
             polygons = new List<Polygon>();
             hexes = new List<Hex>();
             graph = new Graph();
+            mouseInit = new Point();
+        }
+
+        public Map(Canvas theCanvas, double scale, 
+            Action<object, MouseEventArgs> highlightHexagon, 
+            Action<object, MouseEventArgs> unhighlightHexagon, 
+            string dataFromFile) : this(theCanvas, scale, highlightHexagon, unhighlightHexagon)
+        {
+            //TODO: make the map polygons,hexes and the graph from the string called "dataFromFile"
         }
 
         public void generateNeighbors(int index)
@@ -219,7 +229,8 @@ namespace Hexagonites
             p.Fill = (Brush)new BrushConverter().ConvertFromString("#777"); //subject to change, depending on hexagon type
             p.Stroke = (Brush)new BrushConverter().ConvertFromString("#333"); //subject to change, depending on hexagon type
             p.StrokeThickness = strokeThickness; //arbitrary, but should probably be the same for ALL hexes
-            initTransform = new TranslateTransform(mouse.GetPosition(theCanvas).X, mouse.GetPosition(theCanvas).Y);
+            mouseInit = mouse.GetPosition(theCanvas); //This must be saved, since it is easy to write down when saving the map to file
+            initTransform = new TranslateTransform(mouseInit.X, mouseInit.Y); //This must be saved, since every additional Polygon needs this as a renderTransformation
             p.RenderTransform = initTransform;
             p.HorizontalAlignment = 0; //means Left as defined in the enum of HorizontalAlignment
             p.VerticalAlignment = 0; //means Top as defined in the enum of VerticalAlignment
@@ -233,6 +244,51 @@ namespace Hexagonites
             hexes.Add(h); //the Hex data is added to the list
             graph.AddLoose(); //This adds the first entry into the graph
             generateNeighbors(0); //in a separate operation, the neighbors for the first entry are made
+        }
+
+        //Method for turning all the relevant information from the map into a single string
+        //It should then be possible to grab this very string and recreate the map exactly as it was
+        public override string ToString()
+        {
+            StringBuilder mapString = new StringBuilder(); //The string that must consist of the map is generated from this builder.
+
+            //First part of this stringbuilder is to save the graph:
+            foreach(List<Point> pList in graph.graph)
+            {
+                foreach(Point p in pList)
+                {
+                    mapString.AppendFormat(p.X+";"+p.Y);
+                    mapString.AppendFormat("%");
+                }
+                mapString.Length--; //Sneeeaky way of throwing away the last part ;D
+                mapString.AppendFormat("$");
+                mapString.AppendLine();
+            }
+            mapString.Length = mapString.Length - 3;
+            mapString.AppendLine();
+            mapString.AppendFormat("¤");
+            mapString.AppendLine();
+
+            //Second part is to save the hexes:
+            foreach(Hex h in hexes)
+            {
+                mapString.Append(h.center+"%"+h.name+"%"+h.uninitialized+"%"+h.abyss+"$");
+                mapString.AppendLine();
+            }
+            mapString.Length = mapString.Length - 3;
+            mapString.AppendLine();
+            mapString.AppendFormat("¤");
+            mapString.AppendLine();
+
+            //Third part is to save the mouse coordinates from the initial click
+            mapString.Append(mouseInit.X + mouseInit.Y);
+            mapString.AppendLine();
+            mapString.AppendFormat("¤");
+            mapString.AppendLine();
+
+            //Fourth part is to save the polygons:
+            //TODO
+            return mapString.ToString();
         }
     }
 }

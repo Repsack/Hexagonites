@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using QuickGraph;
+using Microsoft.Win32;
+using System.IO;
 
 namespace Hexagonites
 {
@@ -154,6 +156,53 @@ namespace Hexagonites
                 default:
                     break;
             }
+        }
+
+        private void OpenCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            
+            // Create an open file dialog box and only show XAML files.
+            OpenFileDialog openDlg = new OpenFileDialog();
+            openDlg.Filter = "Text Files |*.txt";
+            // Did they click on the OK button?
+            if (true == openDlg.ShowDialog())
+            {
+                // Load all text of selected file.
+                string dataFromFile = File.ReadAllText(openDlg.FileName);
+                // Show string in TextBox.
+                map = new Map(theCanvas, scale, highlightHexagon, unhighlightHexagon, dataFromFile);
+            }
+            
+        }
+
+        private void OpenCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void SaveCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            
+            SaveFileDialog saveDlg = new SaveFileDialog();
+            saveDlg.Filter = "Text Files |*.txt";
+            // Did they click on the OK button?
+            if (true == saveDlg.ShowDialog())
+            {
+                // Save data in the TextBox to the named file.
+                string mapString = map.ToString();
+                File.WriteAllText(saveDlg.FileName, mapString);
+            }
+            
+        }
+
+        private void SaveCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void FileExit_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }

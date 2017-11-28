@@ -7,6 +7,12 @@
         mc:Ignorable="d"
         ResizeMode="NoResize"
         Title="Hexagonites" Width="1280" Height="720">
+    <Window.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.Open" Executed="OpenCmdExecuted"
+            CanExecute="OpenCmdCanExecute"/>
+        <CommandBinding Command="ApplicationCommands.Save" Executed="SaveCmdExecuted"
+            CanExecute="SaveCmdCanExecute"/>
+    </Window.CommandBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -14,11 +20,18 @@
             <RowDefinition Height="69*"/>
         </Grid.RowDefinitions>
 
-        <ToolBar Grid.Row="0">
-            <MenuItem Header="_Game"/>
+        <Menu Grid.Row="0">
+            <MenuItem Header="_File">
+                <MenuItem Command ="ApplicationCommands.Open"/>
+                <MenuItem Command ="ApplicationCommands.Save"/>
+                <Separator/>
+                <MenuItem Header ="_Exit" 
+                    Click ="FileExit_Click"/>
+            </MenuItem>
+            <MenuItem Header="_Mode"/>
             <MenuItem Header="_Options"/>
             <MenuItem Header="_Help"/>
-        </ToolBar>
+        </Menu>
         <Canvas x:Name="theCanvas" Background="#777" Grid.Row="1" MouseLeftButtonDown="CanvasLeftDown" MouseLeftButtonUp="CanvasLeftUp" MouseMove="CanvasMouseMove">
 
         </Canvas>
