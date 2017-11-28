@@ -61,7 +61,32 @@ namespace Hexagonites
             Action<object, MouseEventArgs> unhighlightHexagon, 
             string dataFromFile) : this(theCanvas, scale, highlightHexagon, unhighlightHexagon)
         {
-            //TODO: make the map polygons,hexes and the graph from the string called "dataFromFile"
+            string[] listsandmouse = dataFromFile.Split('¤');
+            string[] graphS = listsandmouse[0].Split('$');
+            string[] hexesS = listsandmouse[1].Split('$');
+            string mouseS = listsandmouse[2];
+            string[] polygonsS = listsandmouse[3].Split('$');
+
+            //digesting the graph part of the file
+            string[] points, onepoint;
+            double x, y;
+            List<List<Point>> newGraph = new List<List<Point>>();
+            foreach (String s1 in graphS)
+            {
+                points = s1.Split('%');
+                List<Point> newPoints = new List<Point>();
+                foreach (String s2 in points)
+                {
+                    onepoint = s2.Split(';');
+                    double.TryParse(onepoint[0], out x);
+                    double.TryParse(onepoint[1], out y);
+                    newPoints.Add(new Point(x,y));
+                }
+                newGraph.Add(newPoints);
+            }
+            graph.graph = newGraph;
+
+            //digestint the hexes part of the file
         }
 
         public void generateNeighbors(int index)
@@ -145,12 +170,14 @@ namespace Hexagonites
 
             }
             //LOOP for debugging
+            /*
             for (int i = 0; i < polygons.Count; i++)
             {
                 Console.WriteLine("Names of hex and pol: ("+hexes[i].name+", "+polygons[i].Name+")");
             }
             Console.WriteLine("Polygon count: " + polygons.Count);
             Console.WriteLine("graph node count: " + graph.Count);
+            */
         }
 
         private void generateHexNeighbors(int index, List<int> updatedDirs)
@@ -272,7 +299,7 @@ namespace Hexagonites
             //Second part is to save the hexes:
             foreach(Hex h in hexes)
             {
-                mapString.Append(h.center+"%"+h.name+"%"+h.uninitialized+"%"+h.abyss+"$");
+                mapString.AppendFormat(h.center+"%"+h.name+"%"+h.uninitialized+"%"+h.abyss+"$");
                 mapString.AppendLine();
             }
             mapString.Length = mapString.Length - 3;
@@ -281,13 +308,21 @@ namespace Hexagonites
             mapString.AppendLine();
 
             //Third part is to save the mouse coordinates from the initial click
-            mapString.Append(mouseInit.X + mouseInit.Y);
+            mapString.Append(mouseInit.X +";"+ mouseInit.Y);
             mapString.AppendLine();
             mapString.AppendFormat("¤");
             mapString.AppendLine();
 
             //Fourth part is to save the polygons:
-            //TODO
+            foreach(Polygon p in polygons)
+            {
+                mapString.AppendFormat(p.Name+"%"+p.Fill.ToString()+"%"+p.Stroke.ToString()+"$");
+                mapString.AppendLine();
+            }
+            mapString.Length = mapString.Length - 3;
+            mapString.AppendLine();
+
+            //Now return the whole thing as a string
             return mapString.ToString();
         }
     }
