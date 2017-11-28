@@ -20,8 +20,39 @@
             <MenuItem Header="_Help"/>
         </ToolBar>
         <Canvas x:Name="theCanvas" Background="#777" Grid.Row="1" MouseLeftButtonDown="CanvasLeftDown" MouseLeftButtonUp="CanvasLeftUp" MouseMove="CanvasMouseMove">
-            
+
         </Canvas>
-        <Rectangle Fill="#DDD" Grid.Row="2"/>
+        <!--<Rectangle Fill="#DDD" Grid.Row="2"/>-->
+        <Grid Background="#DDD" Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="30*"/>
+                <ColumnDefinition Width="70*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Margin="0,10,0,10" BorderBrush="Black" BorderThickness="0,0,1,0" />
+            <Border Grid.Column="1" Margin="0,10,0,10" BorderBrush="Black" BorderThickness="1,0,0,0" />
+            <ListBox Grid.Column="1">
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBoxItem>
+                    <Button x:Name="whiteType" Content="white" FontSize="60" Background="#FFF" Height="80" Click="typeSelect"/>
+                </ListBoxItem>
+                <ListBoxItem>
+                    <Button x:Name="greenType" Content="green" FontSize="60" Background="#0D0" Height="80" Click="typeSelect"/>
+                </ListBoxItem>
+                <ListBoxItem>
+                    <Button x:Name="blueType" Content="blue" FontSize="60" Background="#006" Height="80" Click="typeSelect"/>
+                </ListBoxItem>
+                <ListBoxItem>
+                    <Button x:Name="greyType" Content="grey" FontSize="60" Background="#333" Height="80" Click="typeSelect"/>
+                </ListBoxItem>
+                <ListBoxItem>
+                    <Button x:Name="abyssType" Content="abyss" FontSize="60" Background="#777" Height="80" Click="typeSelect"/>
+                </ListBoxItem>
+            </ListBox>
+        </Grid>
     </Grid>
 </Window>

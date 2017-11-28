@@ -118,7 +118,7 @@ namespace Hexagonites
                 
                 p.Name = "s"+newName; //using "s#" instead of "#" because just a number is forbidden 
                 p.Fill = (Brush)new BrushConverter().ConvertFromString("#777"); //subject to change, depending on hexagon type
-                p.Stroke = Brushes.Black; //subject to change, depending on hexagon type
+                p.Stroke = (Brush)new BrushConverter().ConvertFromString("#333"); //subject to change, depending on hexagon type
                 p.StrokeThickness = strokeThickness; //arbitrary, but should probably be the same for ALL hexes
                 p.RenderTransform = initTransform; //just like the first polygon was placed with a transformation, so must all the rest.
                 p.HorizontalAlignment = 0; //means Left as defined in the enum of HorizontalAlignment
@@ -168,7 +168,7 @@ namespace Hexagonites
                 //next new element is N, and this must be that elements name:
 
                 //using [index], we can ask the graph which index the new neighbors are in
-                //this neighbor index is then used to create a name for this new hex
+                //this neighbor-index is then used to create a name for this new hex
                 //first the point.X is made from double to int, then toString.. Brackets galore!!
                 //we use graph.graph because the list<list<Point>> variable called "graph",
                 //exist in the (class)Graph object that is ALSO called graph
@@ -214,10 +214,10 @@ namespace Hexagonites
             
             //using "0" as name because "placeFirst" really is supposed to be the first index in the list
             Hex h = new Hex(new Point(0, 0), scale, "0"); //needs a point for the makeCorners method
-            h.empty = false; //Means the hex is an actual hex and not just a potential hex
+            h.uninitialized = false; //Means the hex is an actual hex and not just a potential hex
             p.Name = "s0"; //using "s0" instead of "0" because just "0" is forbidden 
             p.Fill = (Brush)new BrushConverter().ConvertFromString("#777"); //subject to change, depending on hexagon type
-            p.Stroke = Brushes.Black; //subject to change, depending on hexagon type
+            p.Stroke = (Brush)new BrushConverter().ConvertFromString("#333"); //subject to change, depending on hexagon type
             p.StrokeThickness = strokeThickness; //arbitrary, but should probably be the same for ALL hexes
             initTransform = new TranslateTransform(mouse.GetPosition(theCanvas).X, mouse.GetPosition(theCanvas).Y);
             p.RenderTransform = initTransform;

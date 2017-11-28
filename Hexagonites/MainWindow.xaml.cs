@@ -32,12 +32,20 @@ namespace Hexagonites
         Map map;
         private bool firstPlaced;
         double scale;
+        private Brush whiteBrush, greenBrush, blueBrush, greyBrush, currentBrush, abyssBrush;
+
 
         public MainWindow()
         {
             InitializeComponent();
             scale = 30;
             map = new Map(theCanvas,scale, highlightHexagon, unhighlightHexagon);
+            whiteBrush = (Brush)new BrushConverter().ConvertFromString("#FFF");
+            greenBrush = (Brush)new BrushConverter().ConvertFromString("#0D0");
+            blueBrush = (Brush)new BrushConverter().ConvertFromString("#006");
+            greyBrush = (Brush)new BrushConverter().ConvertFromString("#333");
+            abyssBrush = (Brush)new BrushConverter().ConvertFromString("#777");
+            currentBrush = whiteBrush;
         }
 
         private void highlightHexagon(object sender, MouseEventArgs e)
@@ -48,7 +56,7 @@ namespace Hexagonites
             int index;
             int.TryParse(map.curHighlightPol.Name.Substring(1), out index);
             map.curHighlightHex = map.hexes[index];
-            if (!map.curHighlightHex.empty)
+            if (!map.curHighlightHex.uninitialized)
             {
                 map.curHighlightPol.Fill = Brushes.Aqua;
             }
@@ -65,9 +73,11 @@ namespace Hexagonites
             Polygon p = (Polygon)sender;
             if (p != map.curSelectedPol || !map.PolSelected)
             {
-                if (!map.curHighlightHex.empty)
+                if (!map.curHighlightHex.uninitialized)
                 {
-                    map.curHighlightPol.Fill = Brushes.White;
+                    int index;
+                    int.TryParse(((Polygon)sender).Name.Substring(1), out index);
+                    map.curHighlightPol.Fill = map.hexes[index].curBrush;
                 }
                 else
                 {
@@ -91,11 +101,23 @@ namespace Hexagonites
             {
                 int index;
                 int.TryParse(map.curHighlightHex.name, out index);
-                if (map.hexes[index].empty)
+                if (map.hexes[index].uninitialized)
                 {
-                    map.hexes[index].empty = false;
-                    map.polygons[index].Fill = Brushes.White;
+                    map.hexes[index].uninitialized = false;
+                    map.hexes[index].abyss = false;
+                    map.polygons[index].Fill = whiteBrush;
+                    map.polygons[index].Stroke = greyBrush;
                     map.generateNeighbors(index);
+                }
+                else
+                {
+                    map.hexes[index].curBrush = currentBrush;
+                    map.polygons[index].Fill = currentBrush;
+                    if(currentBrush == abyssBrush)
+                    {
+                        map.hexes[index].abyss = true;
+                        map.polygons[index].Stroke = greyBrush;
+                    }
                 }
             }
         }
@@ -108,6 +130,30 @@ namespace Hexagonites
         private void CanvasMouseMove(object sender, MouseEventArgs e)
         {
             
+        }
+
+        private void typeSelect(object sender, RoutedEventArgs e)
+        {
+            switch(((Button)sender).Name)
+            {
+                case "whiteType":
+                    currentBrush = whiteBrush;
+                    break;
+                case "greenType":
+                    currentBrush = greenBrush;
+                    break;
+                case "blueType":
+                    currentBrush = blueBrush;
+                    break;
+                case "greyType":
+                    currentBrush = greyBrush;
+                    break;
+                case "abyssType":
+                    currentBrush = abyssBrush;
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
