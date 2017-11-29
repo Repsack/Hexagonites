@@ -61,33 +61,11 @@ namespace Hexagonites
             Action<object, MouseEventArgs> unhighlightHexagon, 
             string dataFromFile) : this(theCanvas, scale, highlightHexagon, unhighlightHexagon)
         {
-            string[] listsandmouse = dataFromFile.Split('¤');
-            string[] graphS = listsandmouse[0].Split('$');
-            string[] hexesS = listsandmouse[1].Split('$');
-            string mouseS = listsandmouse[2];
-            string[] polygonsS = listsandmouse[3].Split('$');
-
-            //digesting the graph part of the file
-            string[] points, onepoint;
-            double x, y;
-            List<List<Point>> newGraph = new List<List<Point>>();
-            foreach (String s1 in graphS)
-            {
-                points = s1.Split('%');
-                List<Point> newPoints = new List<Point>();
-                foreach (String s2 in points)
-                {
-                    onepoint = s2.Split(';');
-                    double.TryParse(onepoint[0], out x);
-                    double.TryParse(onepoint[1], out y);
-                    newPoints.Add(new Point(x,y));
-                }
-                newGraph.Add(newPoints);
-            }
-            graph.graph = newGraph;
-
-            //digestint the hexes part of the file
+            fromString(dataFromFile);
+            
         }
+
+        
 
         public void generateNeighbors(int index)
         {
@@ -324,6 +302,59 @@ namespace Hexagonites
 
             //Now return the whole thing as a string
             return mapString.ToString();
+        }
+
+        private void fromString(string dataFromFile)
+        {
+            string[] listsandmouse = dataFromFile.Split('¤');
+            string[] graphS = listsandmouse[0].Split('$');
+            string[] hexesS = listsandmouse[1].Split('$');
+            string mouseS = listsandmouse[2];
+            string[] polygonsS = listsandmouse[3].Split('$');
+
+            //digesting the graph part of the file
+            string[] points, onepoint;
+            double x, y;
+            List<List<Point>> newGraph = new List<List<Point>>();
+            foreach (String s1 in graphS)
+            {
+                points = s1.Split('%');
+                List<Point> newPoints = new List<Point>();
+                foreach (String s2 in points)
+                {
+                    onepoint = s2.Split(';');
+                    double.TryParse(onepoint[0], out x);
+                    double.TryParse(onepoint[1], out y);
+                    newPoints.Add(new Point(x, y));
+                }
+                newGraph.Add(newPoints);
+            }
+            graph.graph = newGraph;
+
+            //digesting the hexes part of the file
+            string[] onehex;
+            bool u, a;
+            List<Hex> newHexes = new List<Hex>();
+            foreach(string s1 in hexesS)
+            {
+                onehex = s1.Split('%');
+                onepoint = onehex[0].Split('.');
+                double.TryParse(onepoint[0], out x);
+                double.TryParse(onepoint[1], out y);
+                bool.TryParse(onehex[2], out u);
+                bool.TryParse(onehex[3], out a);
+                newHexes.Add(new Hex(new Point(x,y),scale,onehex[1],u,a));
+            }
+            hexes = newHexes;
+
+            //digesting the mouseInit part of the file
+            onepoint = mouseS.Split(';');
+            double.TryParse(onepoint[0], out x);
+            double.TryParse(onepoint[1], out y);
+            mouseInit = new Point(x, y);
+
+            //digesting the polygons part of the file
+            //TODO
         }
     }
 }
