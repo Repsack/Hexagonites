@@ -24,13 +24,6 @@ namespace Hexagonites
     /// </summary>
     public partial class MainWindow : Window
     {
-        /*
-        IMutableVertexListGraph defines methods to add and remove vertices,
-        IMutableEdgeListGraph defines methods to add and remove edges
-        IMutableVertexAndEdgeListGraph merges the two above concepts, 
-        */
-        //BidirectionalGraph<Hex,HexEdge> myHexGraph; //NOT SETUP CORRECLY JUST YET
-
         Map map;
         private bool firstPlaced;
         double scale;

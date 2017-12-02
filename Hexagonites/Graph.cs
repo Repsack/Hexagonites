@@ -40,6 +40,7 @@ namespace Hexagonites
     public class Graph
     {
         public List<List<Point>> graph; //the list of points to add
+        public List<Vertex> graph2;
         public int Count //shows how many entries there are in the (graph)list
         {
             get
@@ -51,12 +52,14 @@ namespace Hexagonites
         public Graph()
         {
             graph = new List<List<Point>>();
+            graph2 = new List<Vertex>();
         }
 
         //This method creates a new entry in the (graph)list and adds 6 invalid points to it
         public void AddLoose()
         {
             graph.Add(new List<Point>()); //the new entry
+            graph2.Add(new Vertex());
             for (int i = 1; i <= 6; i++) //6 step loop, for 6 neighbor spots
             {
                 graph[graph.Count - 1].Add(new Point(-1, -1)); //(-1,-1) means that all neighbors are unknown yet
@@ -88,6 +91,10 @@ namespace Hexagonites
             {
                 oldSet.Add(new Point(p.X,p.Y)); //Just a copy of what we have now, saved for later reference
             }
+            foreach(Point p in graph2[index].neighbors)
+            {
+                oldSet.Add(new Point(p.X, p.Y)); //Just a copy of what we have now, saved for later reference
+            }
 
             //Here we actually create neighbors:
             //The first loop will iterate over all 6 potential neighbors and check for an already existing neighbor
@@ -97,24 +104,28 @@ namespace Hexagonites
             //[i] represents 1 of the 6 neighbor directions: E, SE, SW, W, NW, NE as numbers 0 to 5
             for (int i = 0; i < 6; i++)
             {
-                if(graph[index][i].X==-1) //The hexagon at [index] has no neighbor in direction [i]
+                if(graph2[index].neighbors[i].X==-1) //The hexagon at [index] has no neighbor in direction [i]
                 {
                     AddLoose(); // creates an actual new element in the (graph)list
                     newIndex = graph.Count - 1; //the index of this new element
                     oldY = graph[index][i].Y; //travelcost for [index][i] is saved here
+                    oldY = graph2[index].neighbors[i].Y; //travelcost for [index].neighbors[i] is saved here
 
                     //reusing oldY, the direction [i] is then set with a new X value, namely the newIndex gotten
                     //after calling AddLoose()
                     graph[index][i] = new Point(newIndex, oldY);
-                    
+                    graph2[index].neighbors[i] = new Point(newIndex, oldY);
+
                     //now we do the same thing, but for the new entry:
 
                     oldY = graph[newIndex][oposDir(i)].Y; //save the travelcost
+                    oldY = graph2[newIndex].neighbors[oposDir(i)].Y; //save the travelcost
 
                     //reusing oldY again, the entry at newIndex should also have a neighbor BACK
                     //to the one gotten from [index]..
                     //oposDir gives the opposite direction from i. This should be "backwards" to [index]
                     graph[newIndex][oposDir(i)] = new Point(index, oldY);
+                    graph2[newIndex].neighbors[oposDir(i)] = new Point(index, oldY);
                 }
                 else //[index][i].X is NOT -1
                 {
@@ -138,30 +149,40 @@ namespace Hexagonites
                 //all the pairs are AROUND the entry at [index], and are therefore NOT = index
                 //the entry curNeighborI that gets a new value is found FROM the [index] by graph[index][dir].X
                 int curNeighborI = (int)graph[index][dir].X; //this is the index of the "current" neighbor in direction [dir]
+                curNeighborI = (int)graph2[index].neighbors[dir].X; //this is the index of the "current" neighbor in direction [dir]
 
                 //We also need the index of the "previous" neighbor of [index] in direction [dir], except
                 //the direction of the "previous" neighbor is given from previousDir:
                 int prevNeighborI = (int)graph[index][previousDir].X; //this is the index of the "previous" neighbor in direction [previousDir]
+                prevNeighborI = (int)graph2[index].neighbors[previousDir].X; //this is the index of the "previous" neighbor in direction [previousDir]
 
                 //need to save the oldY value so it can be reapplied later
                 oldY = graph[curNeighborI][leftDir(dir)].Y; //save the old Y value of the current-neighbor's left Point
-                
+                oldY = graph2[curNeighborI].neighbors[leftDir(dir)].Y; //save the old Y value of the current-neighbor's left Point
+
                 //reusing oldY, we are ready to create the left-relation, using both the 2 indexes of the 2 neighbors to [index]
                 //leftDir(dir) delivers the correct direction for the left-relation we are making right now
                 graph[curNeighborI][leftDir(dir)] = new Point(prevNeighborI, oldY); //left-relation now established!
+                graph2[curNeighborI].neighbors[leftDir(dir)] = new Point(prevNeighborI, oldY); //left-relation now established!
 
                 //we need to save oldY once more, before making the right-relation
                 oldY = graph[prevNeighborI][rightDir(previousDir)].Y; //Save the old Y value of the previous-neighbor's right Point
+                oldY = graph2[prevNeighborI].neighbors[rightDir(previousDir)].Y; //Save the old Y value of the previous-neighbor's right Point
 
                 //reusing oldY we are ready to create the right-relation, using both the 2 indexes of the 2 neighbors to [index]
                 //rightDir(previousDir) delivers the correct direction for the right-relation we are making right now
                 graph[prevNeighborI][rightDir(previousDir)] = new Point(curNeighborI,oldY); //right-relation now established!
+                graph2[prevNeighborI].neighbors[rightDir(previousDir)] = new Point(curNeighborI, oldY); //right-relation now established!
 
                 previousDir = dir; //set previousDir as dir (current) just before dir is incremented by dir++;
             }
 
             //After the work, the newSize is set
             foreach (Point p in graph[index])
+            {
+                newSet.Add(new Point(p.X, p.Y)); //Just a copy
+            }
+            foreach (Point p in graph2[index].neighbors)
             {
                 newSet.Add(new Point(p.X, p.Y)); //Just a copy
             }

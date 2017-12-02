@@ -29,7 +29,6 @@ namespace Hexagonites
         Point mouseInit;
         public Polygon curHighlightPol, curSelectedPol;
         public Hex curHighlightHex,curSelectedHex;
-        Marker marker;
         private Canvas theCanvas;
         private double scale;
         private double strokeThickness;
@@ -125,9 +124,9 @@ namespace Hexagonites
                 p = new Polygon();
                 
                 //Console.WriteLine("i is " + i);
-                double theX = graph.graph[index][updatedDirs[i]].X;
+                double theX = graph.graph2[index].neighbors[updatedDirs[i]].X;
                 //Console.WriteLine("theX is " + theX);
-                newName = ((int)(graph.graph[index][updatedDirs[i]].X)).ToString();
+                newName = ((int)(graph.graph2[index].neighbors[updatedDirs[i]].X)).ToString();
                 
                 p.Name = "s"+newName; //using "s#" instead of "#" because just a number is forbidden 
                 p.Fill = (Brush)new BrushConverter().ConvertFromString("#777"); //subject to change, depending on hexagon type
@@ -140,7 +139,7 @@ namespace Hexagonites
                 //The polygon can now receive the corner points generated in the hex object
                 //this is obtained from a hex, 
                 //but the index is found just like how we found the index for the name
-                p.Points = hexes[(int)graph.graph[index][updatedDirs[i]].X].corners;
+                p.Points = hexes[(int)graph.graph2[index].neighbors[updatedDirs[i]].X].corners;
                 p.MouseEnter += new MouseEventHandler(highlightHexagon); //can mouseover
                 p.MouseLeave += new MouseEventHandler(unhighlightHexagon); //can STOP mouseover
                 theCanvas.Children.Add(p); //give the polygon to the canvas for rendering
@@ -187,7 +186,7 @@ namespace Hexagonites
                 //first the point.X is made from double to int, then toString.. Brackets galore!!
                 //we use graph.graph because the list<list<Point>> variable called "graph",
                 //exist in the (class)Graph object that is ALSO called graph
-                newName = ((int)(graph.graph[index][updatedDirs[i]].X)).ToString();
+                newName = ((int)(graph.graph2[index].neighbors[updatedDirs[i]].X)).ToString();
 
                 //Now all the information is there, and we can make the new hex
                 hexes.Add(new Hex(newCenter, scale, newName)); //create the new Hex object
@@ -258,9 +257,9 @@ namespace Hexagonites
             StringBuilder mapString = new StringBuilder(); //The string that must consist of the map is generated from this builder.
 
             //First part of this stringbuilder is to save the graph:
-            foreach(List<Point> pList in graph.graph)
+            foreach(Vertex v in graph.graph2)
             {
-                foreach(Point p in pList)
+                foreach(Point p in v.neighbors)
                 {
                     mapString.AppendFormat(p.X+";"+p.Y);
                     mapString.AppendFormat("%");
@@ -304,7 +303,7 @@ namespace Hexagonites
             return mapString.ToString();
         }
 
-        private void fromString(string dataFromFile)
+        private void fromString(string dataFromFile) //INCOMPLETE
         {
             string[] listsandmouse = dataFromFile.Split('¤');
             string[] graphS = listsandmouse[0].Split('$');
@@ -312,7 +311,7 @@ namespace Hexagonites
             string mouseS = listsandmouse[2];
             string[] polygonsS = listsandmouse[3].Split('$');
 
-            //digesting the graph part of the file
+            //digesting the graph part of the file - NOT CORRECT
             string[] points, onepoint;
             double x, y;
             List<List<Point>> newGraph = new List<List<Point>>();
