@@ -28,11 +28,13 @@
                 <MenuItem Header ="_Exit" 
                     Click ="FileExit_Click"/>
             </MenuItem>
-            <MenuItem Header="_Mode"/>
+            <MenuItem Header="_Mode switch">
+                <MenuItem Header="Game mode" IsEnabled="False"/>
+            </MenuItem>
             <MenuItem Header="_Options"/>
             <MenuItem Header="_Help"/>
         </Menu>
-        <Canvas x:Name="theCanvas" Background="#777" Grid.Row="1" MouseLeftButtonDown="CanvasLeftDown" MouseLeftButtonUp="CanvasLeftUp" MouseMove="CanvasMouseMove">
+        <Canvas x:Name="theCanvas" ClipToBounds="True" Background="#777" Grid.Row="1" MouseLeftButtonDown="CanvasLeftDown" MouseLeftButtonUp="CanvasLeftUp" MouseMove="CanvasMouseMove">
 
         </Canvas>
         <!--<Rectangle Fill="#DDD" Grid.Row="2"/>-->
