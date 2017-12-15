@@ -29,7 +29,7 @@ namespace Hexagonites
         TranslateTransform initTransform;
         Point mouseInit;
         public Polygon curHighlightPol, curSelectedPol;
-        public Hex curHighlightHex,curSelectedHex;
+        public Hex curHighlightHex, curSelectedHex;
         private Canvas theCanvas;
         private double scale;
         private double strokeThickness;
@@ -38,8 +38,8 @@ namespace Hexagonites
 
         public bool PolSelected { get; internal set; }
 
-        public Map(Canvas theCanvas, double scale, 
-            Action<object, MouseEventArgs> highlightHexagon, 
+        public Map(Canvas theCanvas, double scale,
+            Action<object, MouseEventArgs> highlightHexagon,
             Action<object, MouseEventArgs> unhighlightHexagon)
         {
             this.theCanvas = theCanvas;
@@ -56,16 +56,16 @@ namespace Hexagonites
             mouseInit = new Point();
         }
 
-        public Map(Canvas theCanvas, double scale, 
-            Action<object, MouseEventArgs> highlightHexagon, 
-            Action<object, MouseEventArgs> unhighlightHexagon, 
+        public Map(Canvas theCanvas, double scale,
+            Action<object, MouseEventArgs> highlightHexagon,
+            Action<object, MouseEventArgs> unhighlightHexagon,
             string dataFromFile) : this(theCanvas, scale, highlightHexagon, unhighlightHexagon)
         {
             fromString(dataFromFile);
-            
+
         }
 
-        
+
 
         public void generateNeighbors(int index)
         {
@@ -116,20 +116,20 @@ namespace Hexagonites
             //Each polygon must ask the correct hex for the cornerPoints they need to be fully rendered
 
             Polygon p; //the polygon object to be added
-            string newName="-111"; //the polygons need a name, aswell as the hex objects do
+            string newName = "-111"; //the polygons need a name, aswell as the hex objects do
             Console.WriteLine("updatedSet size = " + updatedDirs.Count);
             Console.WriteLine("index = " + index);
             Console.WriteLine("graph entry count: " + graph.Count);
-            for(int i = 0; i < updatedDirs.Count; i++) //these are amount of new polygons needed
+            for (int i = 0; i < updatedDirs.Count; i++) //these are amount of new polygons needed
             {
                 p = new Polygon();
-                
+
                 //Console.WriteLine("i is " + i);
                 double theX = graph.graph2[index].neighbors[updatedDirs[i]].X;
                 //Console.WriteLine("theX is " + theX);
                 newName = ((int)(graph.graph2[index].neighbors[updatedDirs[i]].X)).ToString();
-                
-                p.Name = "s"+newName; //using "s#" instead of "#" because just a number is forbidden 
+
+                p.Name = "s" + newName; //using "s#" instead of "#" because just a number is forbidden 
                 p.Fill = (Brush)new BrushConverter().ConvertFromString("#777"); //subject to change, depending on hexagon type
                 p.Stroke = (Brush)new BrushConverter().ConvertFromString("#333"); //subject to change, depending on hexagon type
                 p.StrokeThickness = strokeThickness; //arbitrary, but should probably be the same for ALL hexes
@@ -168,7 +168,7 @@ namespace Hexagonites
             Point newCenter; //represents the center of the new hexagon to-be
 
             //each hex must get a new name.
-            string newName; 
+            string newName;
 
             //Through updatedIndexes know exactly which new hex objects must be made next to the one at "index"
             //We also know their positions relative to the center
@@ -207,26 +207,26 @@ namespace Hexagonites
             switch (dir)
             {
                 case 0: //Means E
-                    return new Point(center.X+width,center.Y); 
+                    return new Point(center.X + width, center.Y);
                 case 1: //Means SE
                     return new Point(center.X + width / 2.0, center.Y + (height * 3) / 4.0);
                 case 2: //Means SW
                     return new Point(center.X - width / 2.0, center.Y + (height * 3) / 4.0);
                 case 3: //Means W
-                    return new Point(center.X-width, center.Y);
+                    return new Point(center.X - width, center.Y);
                 case 4: //Means NW
                     return new Point(center.X - width / 2.0, center.Y - (height * 3) / 4.0);
                 case 5: //Means NE
                     return new Point(center.X + width / 2.0, center.Y - (height * 3) / 4.0);
                 default:
-                    return new Point(-100,-100);
+                    return new Point(-100, -100);
             }
         }
 
         public void placeFirst(object sender, MouseEventArgs mouse)
         {
             Polygon p = new Polygon();
-            
+
             //using "0" as name because "placeFirst" really is supposed to be the first index in the list
             Hex h = new Hex(new Point(0, 0), scale, "0"); //needs a point for the makeCorners method
             h.uninitialized = false; //Means the hex is an actual hex and not just a potential hex
@@ -258,11 +258,11 @@ namespace Hexagonites
             StringBuilder mapString = new StringBuilder(); //The string that must consist of the map is generated from this builder.
 
             //First part of this stringbuilder is to save the graph:
-            foreach(Vertex v in graph.graph2)
+            foreach (Vertex v in graph.graph2)
             {
-                foreach(Point p in v.neighbors)
+                foreach (Point p in v.neighbors)
                 {
-                    mapString.AppendFormat(p.X+";"+p.Y);
+                    mapString.AppendFormat(p.X + ";" + p.Y);
                     mapString.AppendFormat("%");
                 }
                 mapString.Length--; //Sneeeaky way of throwing away the last part ;D
@@ -275,9 +275,9 @@ namespace Hexagonites
             mapString.AppendLine();
 
             //Second part is to save the hexes:
-            foreach(Hex h in hexes)
+            foreach (Hex h in hexes)
             {
-                mapString.AppendFormat(h.center+"%"+h.name+"%"+h.uninitialized+"%"+h.abyss+"$");
+                mapString.AppendFormat(h.center + "%" + h.name + "%" + h.uninitialized + "%" + h.abyss + "$");
                 mapString.AppendLine();
             }
             mapString.Length = mapString.Length - 3;
@@ -286,15 +286,15 @@ namespace Hexagonites
             mapString.AppendLine();
 
             //Third part is to save the mouse coordinates from the initial click
-            mapString.Append(mouseInit.X +";"+ mouseInit.Y);
+            mapString.Append(mouseInit.X + ";" + mouseInit.Y);
             mapString.AppendLine();
             mapString.AppendFormat("¤");
             mapString.AppendLine();
 
             //Fourth part is to save the polygons:
-            foreach(Polygon p in polygons)
+            foreach (Polygon p in polygons)
             {
-                mapString.AppendFormat(p.Name+"%"+p.Fill.ToString()+"%"+p.Stroke.ToString()+"$");
+                mapString.AppendFormat(p.Name + "%" + p.Fill.ToString() + "%" + p.Stroke.ToString() + "$");
                 mapString.AppendLine();
             }
             mapString.Length = mapString.Length - 3;
@@ -335,7 +335,7 @@ namespace Hexagonites
             string[] onehex;
             bool u, a;
             List<Hex> newHexes = new List<Hex>();
-            foreach(string s1 in hexesS)
+            foreach (string s1 in hexesS)
             {
                 onehex = s1.Split('%');
                 onepoint = onehex[0].Split('.');
@@ -343,7 +343,7 @@ namespace Hexagonites
                 double.TryParse(onepoint[1], out y);
                 bool.TryParse(onehex[2], out u);
                 bool.TryParse(onehex[3], out a);
-                newHexes.Add(new Hex(new Point(x,y),scale,onehex[1],u,a));
+                newHexes.Add(new Hex(new Point(x, y), scale, onehex[1], u, a));
             }
             hexes = newHexes;
 
@@ -355,39 +355,6 @@ namespace Hexagonites
 
             //digesting the polygons part of the file
             //TODO
-        }
-
-        /// <summary>
-        /// Writes the given object instance to a binary file.
-        /// <para>Object type (and all child types) must be decorated with the [Serializable] attribute.</para>
-        /// <para>To prevent a variable from being serialized, decorate it with the [NonSerialized] attribute; cannot be applied to properties.</para>
-        /// </summary>
-        /// <typeparam name="T">The type of object being written to the XML file.</typeparam>
-        /// <param name="filePath">The file path to write the object instance to.</param>
-        /// <param name="objectToWrite">The object instance to write to the XML file.</param>
-        /// <param name="append">If false the file will be overwritten if it already exists. If true the contents will be appended to the file.</param>
-        public static void WriteToBinaryFile<T>(string filePath, T objectToWrite, bool append = false)
-        {
-            using (Stream stream = File.Open(filePath, append ? FileMode.Append : FileMode.Create))
-            {
-                var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-                binaryFormatter.Serialize(stream, objectToWrite);
-            }
-        }
-
-        /// <summary>
-        /// Reads an object instance from a binary file.
-        /// </summary>
-        /// <typeparam name="T">The type of object to read from the XML.</typeparam>
-        /// <param name="filePath">The file path to read the object instance from.</param>
-        /// <returns>Returns a new instance of the object read from the binary file.</returns>
-        public static T ReadFromBinaryFile<T>(string filePath)
-        {
-            using (Stream stream = File.Open(filePath, FileMode.Open))
-            {
-                var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-                return (T)binaryFormatter.Deserialize(stream);
-            }
         }
     }
 }

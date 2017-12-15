@@ -28,7 +28,9 @@ namespace Hexagonites
         private bool firstPlaced;
         double scale;
         private Brush whiteBrush, greenBrush, blueBrush, greyBrush, currentBrush, abyssBrush;
-
+        private Point lastMousePos;
+        private bool isDragged;
+        
 
         public MainWindow()
         {
@@ -41,6 +43,21 @@ namespace Hexagonites
             greyBrush = (Brush)new BrushConverter().ConvertFromString("#333");
             abyssBrush = (Brush)new BrushConverter().ConvertFromString("#777");
             currentBrush = whiteBrush;
+            initialCanvasPos();
+        }
+
+
+        //Used for placing the canvas in a different position
+        //The canvas has a height and a width of 1 million. 
+        //By moving it half that size up and left, it seems to stretch forever long!
+        //In XAML, the canvas is placed BEFORE the other things inside the parent grid
+        //This is so the canvas is "at the bottom" and will stay "below" the other gridrows
+        //when you pan it along
+        private void initialCanvasPos()
+        {
+            var matrix = mt.Matrix; // it's a struct
+            matrix.Translate(-500000, -500000);
+            mt.Matrix = matrix;
         }
 
         private void highlightHexagon(object sender, MouseEventArgs e)
@@ -119,12 +136,41 @@ namespace Hexagonites
 
         private void CanvasLeftUp(object sender, MouseButtonEventArgs e)
         {
-            
+
+        }
+
+        private void CanvasRightDown(object sender, MouseButtonEventArgs e)
+        {
+            base.OnMouseRightButtonDown(e);
+            theCanvas.CaptureMouse();
+            //_last = e.GetPosition(canvas);
+            lastMousePos = e.GetPosition(this);
+            isDragged = true;
+        }
+
+        private void CanvasRightUp(object sender, MouseButtonEventArgs e)
+        {
+            base.OnMouseRightButtonUp(e);
+            theCanvas.ReleaseMouseCapture();
+            isDragged = false;
+            Console.WriteLine("UP");
         }
 
         private void CanvasMouseMove(object sender, MouseEventArgs e)
         {
-            
+            if (isDragged == false)
+                return;
+
+            base.OnMouseMove(e);
+            if (e.RightButton == MouseButtonState.Pressed && theCanvas.IsMouseCaptured)
+            {
+
+                var pos = e.GetPosition(this);
+                var matrix = mt.Matrix; // it's a struct
+                matrix.Translate(pos.X - lastMousePos.X, pos.Y - lastMousePos.Y);
+                mt.Matrix = matrix;
+                lastMousePos = pos;
+            }
         }
 
         private void typeSelect(object sender, RoutedEventArgs e)
@@ -150,6 +196,41 @@ namespace Hexagonites
                     break;
             }
         }
+
+        /// <summary>
+        /// Writes the given object instance to a binary file.
+        /// <para>Object type (and all child types) must be decorated with the [Serializable] attribute.</para>
+        /// <para>To prevent a variable from being serialized, decorate it with the [NonSerialized] attribute; cannot be applied to properties.</para>
+        /// </summary>
+        /// <typeparam name="T">The type of object being written to the XML file.</typeparam>
+        /// <param name="filePath">The file path to write the object instance to.</param>
+        /// <param name="objectToWrite">The object instance to write to the XML file.</param>
+        /// <param name="append">If false the file will be overwritten if it already exists. If true the contents will be appended to the file.</param>
+        public static void WriteToBinaryFile<T>(string filePath, T objectToWrite, bool append = false)
+        {
+            using (Stream stream = File.Open(filePath, append ? FileMode.Append : FileMode.Create))
+            {
+                var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                binaryFormatter.Serialize(stream, objectToWrite);
+            }
+        }
+
+        /// <summary>
+        /// Reads an object instance from a binary file.
+        /// </summary>
+        /// <typeparam name="T">The type of object to read from the XML.</typeparam>
+        /// <param name="filePath">The file path to read the object instance from.</param>
+        /// <returns>Returns a new instance of the object read from the binary file.</returns>
+        public static T ReadFromBinaryFile<T>(string filePath)
+        {
+            using (Stream stream = File.Open(filePath, FileMode.Open))
+            {
+                var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                return (T)binaryFormatter.Deserialize(stream);
+            }
+        }
+
+        
 
         private void OpenCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {

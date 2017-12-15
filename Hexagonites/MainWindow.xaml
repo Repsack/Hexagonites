@@ -20,6 +20,20 @@
             <RowDefinition Height="69*"/>
         </Grid.RowDefinitions>
 
+        
+            
+        
+        <Canvas x:Name="theCanvas" Background="#777" Grid.Row="1" 
+                MouseLeftButtonDown="CanvasLeftDown" MouseLeftButtonUp="CanvasLeftUp" 
+                MouseRightButtonDown="CanvasRightDown" MouseRightButtonUp="CanvasRightUp" 
+                MouseMove="CanvasMouseMove"
+                Height="1000000"  Width="1000000">
+            <Canvas.RenderTransform>
+                <MatrixTransform x:Name="mt"/>
+            </Canvas.RenderTransform>
+
+        </Canvas>
+
         <Menu Grid.Row="0">
             <MenuItem Header="_File">
                 <MenuItem Command ="ApplicationCommands.Open"/>
@@ -34,9 +48,6 @@
             <MenuItem Header="_Options"/>
             <MenuItem Header="_Help"/>
         </Menu>
-        <Canvas x:Name="theCanvas" ClipToBounds="True" Background="#777" Grid.Row="1" MouseLeftButtonDown="CanvasLeftDown" MouseLeftButtonUp="CanvasLeftUp" MouseMove="CanvasMouseMove">
-
-        </Canvas>
         <!--<Rectangle Fill="#DDD" Grid.Row="2"/>-->
         <Grid Background="#DDD" Grid.Row="2">
             <Grid.ColumnDefinitions>
