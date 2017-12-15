@@ -37,6 +37,7 @@ namespace Hexagonites
     /// must show 7, since going NW from 11 and getting to 7, means you can
     /// go SE from 7 and get to 11
     /// </summary>
+    [Serializable]
     public class Graph
     {
         public List<List<Point>> graph; //the list of points to add

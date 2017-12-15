@@ -5,7 +5,8 @@ using System.Windows.Media;
 
 namespace Hexagonites
 {
-    class Hex
+    [Serializable]
+    public class Hex
     {
         //Can a delegate here grab the event that fires from a Polygon that has the same name..?
 

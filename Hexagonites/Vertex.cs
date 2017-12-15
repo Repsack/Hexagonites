@@ -15,6 +15,7 @@ namespace Hexagonites
     //
     //The solution is then to create a coordinate system so that the next graph entry should
     //only be created if no other graph entry matches the coordinates
+    [Serializable]
     public class Vertex
     {
         public List<Point> neighbors; //Like before, these represent the neighbor direction and the travelcost

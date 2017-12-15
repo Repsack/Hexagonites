@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,7 +22,8 @@ using System.Windows.Shapes;
 /// </summary>
 namespace Hexagonites
 {
-    class Map
+    [Serializable()]
+    public class Map : ISerializable
     {
         public List<Polygon> polygons;
         public List<Hex> hexes;
@@ -37,6 +39,11 @@ namespace Hexagonites
         internal bool polHighlighted;
 
         public bool PolSelected { get; internal set; }
+
+        public Map()
+        {
+
+        }
 
         public Map(Canvas theCanvas, double scale,
             Action<object, MouseEventArgs> highlightHexagon,
@@ -223,6 +230,14 @@ namespace Hexagonites
             }
         }
 
+        internal MapData CreateMapData()
+        {
+            MapData mapData = new MapData();
+            //SET IT UP
+            return mapData;
+
+        }
+
         public void placeFirst(object sender, MouseEventArgs mouse)
         {
             Polygon p = new Polygon();
@@ -355,6 +370,11 @@ namespace Hexagonites
 
             //digesting the polygons part of the file
             //TODO
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Map", this);
         }
     }
 }

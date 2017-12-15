@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using QuickGraph;
 using Microsoft.Win32;
 using System.IO;
+using System.Xml.Serialization;
 
 namespace Hexagonites
 {
@@ -237,14 +238,22 @@ namespace Hexagonites
             
             // Create an open file dialog box and only show XAML files.
             OpenFileDialog openDlg = new OpenFileDialog();
-            openDlg.Filter = "Text Files |*.txt";
+            openDlg.Filter = "XML files |*.xml";
             // Did they click on the OK button?
             if (true == openDlg.ShowDialog())
             {
+                //1st attempt
                 // Load all text of selected file.
-                string dataFromFile = File.ReadAllText(openDlg.FileName);
+                //string dataFromFile = File.ReadAllText(openDlg.FileName);
                 // Show string in TextBox.
-                map = new Map(theCanvas, scale, highlightHexagon, unhighlightHexagon, dataFromFile);
+                //map = new Map(theCanvas, scale, highlightHexagon, unhighlightHexagon, dataFromFile);
+
+                //2nd attempt
+                //map = ReadFromBinaryFile<Map>(openDlg.FileName);
+                //MAYBE REFRESH CANVAS??
+
+                //3rd attempt
+
             }
             
         }
@@ -258,15 +267,31 @@ namespace Hexagonites
         {
             
             SaveFileDialog saveDlg = new SaveFileDialog();
-            saveDlg.Filter = "Text Files |*.txt";
+            saveDlg.Filter = "XML files |*.xml";
             // Did they click on the OK button?
             if (true == saveDlg.ShowDialog())
             {
+                //1st attempt
                 // Save data in the TextBox to the named file.
-                string mapString = map.ToString();
-                File.WriteAllText(saveDlg.FileName, mapString);
+                //string mapString = map.ToString();
+                //File.WriteAllText(saveDlg.FileName, mapString);
+
+                //2nd attempt
+                //WriteToBinaryFile<Map>(saveDlg.FileName, map, false);
+
+                //3rd attempt
+                MapData md = map.CreateMapData();
+                try
+                { 
+                    XmlSerializer xs = new XmlSerializer(typeof(MapData));
+                    TextWriter tw = new StreamWriter(saveDlg.FileName);
+                    xs.Serialize(tw, md);
+                }
+                catch (Exception eeee)
+                {
+                    Console.WriteLine(eeee.StackTrace);
+                }
             }
-            
         }
 
         private void SaveCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
