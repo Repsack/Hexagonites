@@ -27,7 +27,7 @@ namespace Hexagonites
     {
         public List<Polygon> polygons;
         public List<Hex> hexes;
-        private Graph graph;
+        public Graph graph;
         TranslateTransform initTransform;
         Point mouseInit;
         public Polygon curHighlightPol, curSelectedPol;
@@ -233,9 +233,51 @@ namespace Hexagonites
         internal MapData CreateMapData()
         {
             MapData mapData = new MapData();
-            //SET IT UP
+            //mapData.polygons = polygons;
+            mapData.hexes = hexes;
+            mapData.graph = graph;
+            mapData.initTransform = initTransform;
+            mapData.mouseInit = mouseInit;
+            foreach (Vertex v in mapData.graph.graph2)
+            {
+                Console.WriteLine("NeighborCount to file: " + v.neighbors.Count);
+            }
             return mapData;
 
+        }
+
+        internal void UseMapData(MapData fileMap)
+        {
+            hexes = null;
+            hexes = fileMap.hexes;
+            graph = null;
+            foreach (Vertex v in fileMap.graph.graph2)
+            {
+                Console.WriteLine("NeighborCount from file: " + v.neighbors.Count);
+            }
+            graph = fileMap.graph; //is apparently wrong...
+            initTransform = fileMap.initTransform;
+            mouseInit = fileMap.mouseInit;
+            theCanvas.Children.Clear();
+            polygons = null;
+            polygons = new List<Polygon>();
+            Polygon newP;
+            //CANNOT set colors here, is done right after the MainWindow calls this method
+            foreach (Hex h in hexes)
+            {
+                newP = new Polygon();
+                newP.Name = "s" + h.name;
+                newP.Stroke = (Brush)new BrushConverter().ConvertFromString("#333");
+                newP.StrokeThickness = strokeThickness;
+                newP.RenderTransform = initTransform;
+                newP.HorizontalAlignment = 0;
+                newP.VerticalAlignment = 0;
+                newP.Points = h.corners;
+                newP.MouseEnter += new MouseEventHandler(highlightHexagon);
+                newP.MouseLeave += new MouseEventHandler(unhighlightHexagon);
+                theCanvas.Children.Add(newP);
+                polygons.Add(newP);
+            }
         }
 
         public void placeFirst(object sender, MouseEventArgs mouse)
@@ -244,6 +286,7 @@ namespace Hexagonites
 
             //using "0" as name because "placeFirst" really is supposed to be the first index in the list
             Hex h = new Hex(new Point(0, 0), scale, "0"); //needs a point for the makeCorners method
+            h.type = "white";
             h.uninitialized = false; //Means the hex is an actual hex and not just a potential hex
             p.Name = "s0"; //using "s0" instead of "0" because just "0" is forbidden 
             p.Fill = (Brush)new BrushConverter().ConvertFromString("#777"); //subject to change, depending on hexagon type

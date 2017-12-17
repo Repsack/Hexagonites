@@ -23,17 +23,20 @@ namespace Hexagonites
 
         public Vertex()
         {
+            
+        }
+        public Vertex(bool notNew)
+        {
             neighbors = new List<Point>();
             coords = new List<int>();
             for (int i = 1; i <= 6; i++) //6 step loop, for 6 neighbor spots
             {
                 neighbors.Add(new Point(-1, -1)); //(-1,-1) means that all neighbors are unknown yet
-                if(i<=3) //only 3 coords
+                if (i <= 3) //only 3 coords
                 {
                     coords.Add(-30000); //default error value
                 }
             }
-
         }
     }
 }

@@ -9,12 +9,12 @@ using System.Windows.Shapes;
 
 namespace Hexagonites
 {
-    class MapData
+    public struct MapData
     {
-        public List<Polygon> polygons; //we can TRY and save it....
+        //public List<Polygon> polygons; //we can TRY and save it....and FAILLL
         public List<Hex> hexes;
         public Graph graph;
-        TranslateTransform initTransform; //we can TRY
-        Point mouseInit; //we can TRY try tryyyy
+        public TranslateTransform initTransform; //we can TRY
+        public Point mouseInit; //we can TRY try tryyyy
     }
 }

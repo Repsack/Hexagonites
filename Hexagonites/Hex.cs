@@ -17,7 +17,7 @@ namespace Hexagonites
         private double sscale;
         public bool uninitialized; //starts as true, means this hex does not reeeally exist yet
         public bool abyss; //used to mimic an uninitialized hex, if there is a need for them
-        public Brush curBrush;
+        public string type { get; set; }
         public bool highlighted { get; set; }
         public double scale
         {
@@ -28,6 +28,11 @@ namespace Hexagonites
                 makeCorners();
             }
         }
+
+        public Hex()
+        {
+
+        }
         public Hex(Point center, double scale, string name)
         {
             this.center = center;
@@ -35,7 +40,7 @@ namespace Hexagonites
             this.name = name;
             this.uninitialized = true;
             makeCorners();
-            curBrush = Brushes.White;
+            type = "abyss";
 
         }
 

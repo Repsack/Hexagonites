@@ -31,7 +31,7 @@ namespace Hexagonites
         private Brush whiteBrush, greenBrush, blueBrush, greyBrush, currentBrush, abyssBrush;
         private Point lastMousePos;
         private bool isDragged;
-        
+        private string currentType;
 
         public MainWindow()
         {
@@ -44,6 +44,7 @@ namespace Hexagonites
             greyBrush = (Brush)new BrushConverter().ConvertFromString("#333");
             abyssBrush = (Brush)new BrushConverter().ConvertFromString("#777");
             currentBrush = whiteBrush;
+            currentType = "white";
             initialCanvasPos();
         }
 
@@ -90,7 +91,7 @@ namespace Hexagonites
                 {
                     int index;
                     int.TryParse(((Polygon)sender).Name.Substring(1), out index);
-                    map.curHighlightPol.Fill = map.hexes[index].curBrush;
+                    map.curHighlightPol.Fill = getBrush(map.hexes[index].type);
                 }
                 else
                 {
@@ -102,6 +103,8 @@ namespace Hexagonites
                 map.curHighlightPol.Fill = Brushes.Blue;
             }
         }
+
+        
 
         private void CanvasLeftDown(object sender, MouseButtonEventArgs e)
         {
@@ -118,13 +121,15 @@ namespace Hexagonites
                 {
                     map.hexes[index].uninitialized = false;
                     map.hexes[index].abyss = false;
-                    map.polygons[index].Fill = whiteBrush;
+                    map.hexes[index].type = currentType;
+                    map.polygons[index].Fill = currentBrush;
                     map.polygons[index].Stroke = greyBrush;
                     map.generateNeighbors(index);
                 }
                 else
                 {
-                    map.hexes[index].curBrush = currentBrush;
+                    //map.hexes[index].curBrush = currentBrush;
+                    map.hexes[index].type = currentType;
                     map.polygons[index].Fill = currentBrush;
                     if(currentBrush == abyssBrush)
                     {
@@ -176,25 +181,71 @@ namespace Hexagonites
 
         private void typeSelect(object sender, RoutedEventArgs e)
         {
-            switch(((Button)sender).Name)
+            switch (((Button)sender).Name)
             {
                 case "whiteType":
                     currentBrush = whiteBrush;
+                    currentType = "white";
                     break;
                 case "greenType":
                     currentBrush = greenBrush;
+                    currentType = "green";
                     break;
                 case "blueType":
                     currentBrush = blueBrush;
+                    currentType = "blue";
                     break;
                 case "greyType":
                     currentBrush = greyBrush;
+                    currentType = "grey";
                     break;
                 case "abyssType":
                     currentBrush = abyssBrush;
+                    currentType = "abyss";
                     break;
                 default:
                     break;
+            }
+        }
+
+        private Brush getBrush(string type)
+        {
+            switch (type)
+            {
+                case "white":
+                    return whiteBrush;
+                case "green":
+                    return greenBrush;
+                case "blue":
+                    return blueBrush;
+                case "grey":
+                    return greyBrush;
+                case "abyss":
+                    return abyssBrush;
+                default:
+                    return Brushes.Red;
+            }
+        }
+
+        private void myKey(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.N)
+            {
+                string listText = "[";
+                string n = map.curHighlightHex.name;
+                int index;
+                int.TryParse(n,out index);
+                int countt = 0;
+                foreach(Point p in map.graph.graph2[index].neighbors)
+                {
+                    listText = listText + p.X+",";
+                    if(p.X > -1)
+                    {
+                        ++countt;
+                    }
+                }
+                neighborList.Text = listText + "] - " + map.graph.graph2[index].neighbors.Count;
+                neighborText.Text = "neighbors: " + countt;
             }
         }
 
@@ -253,10 +304,33 @@ namespace Hexagonites
                 //MAYBE REFRESH CANVAS??
 
                 //3rd attempt
-
+                TextReader reader = null;
+                MapData fileMap;
+                try
+                {
+                    var serializer = new XmlSerializer(typeof(MapData));
+                    reader = new StreamReader(openDlg.FileName);
+                    fileMap = (MapData)serializer.Deserialize(reader);
+                }
+                finally
+                {
+                    if (reader != null)
+                        reader.Close();
+                }
+                firstPlaced = true;
+                map.UseMapData(fileMap); //cannot setup colors, since they are saved here
+                //This for loop sets the colors
+                for (int i = 0; i < map.hexes.Count-1; ++i)
+                {
+                    Console.WriteLine("PolygonCount: "+map.polygons.Count);
+                    map.polygons[i].Fill = getBrush(map.hexes[i].type);
+                }
+                
             }
             
         }
+
+        
 
         private void OpenCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
@@ -265,7 +339,11 @@ namespace Hexagonites
 
         private void SaveCmdExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            
+            if(!firstPlaced)
+            {
+                MessageBox.Show("You cannot save an empty map");
+                return;
+            }
             SaveFileDialog saveDlg = new SaveFileDialog();
             saveDlg.Filter = "XML files |*.xml";
             // Did they click on the OK button?
@@ -281,22 +359,26 @@ namespace Hexagonites
 
                 //3rd attempt
                 MapData md = map.CreateMapData();
-                try
-                { 
-                    XmlSerializer xs = new XmlSerializer(typeof(MapData));
-                    TextWriter tw = new StreamWriter(saveDlg.FileName);
-                    xs.Serialize(tw, md);
-                }
-                catch (Exception eeee)
-                {
-                    Console.WriteLine(eeee.StackTrace);
-                }
+                XmlSerializer xs;
+                TextWriter tw;
+                xs = new XmlSerializer(typeof(MapData));
+                tw = new StreamWriter(saveDlg.FileName);
+                xs.Serialize(tw, md);
+                
             }
         }
 
         private void SaveCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = true;
+        }
+
+        private void FileNew_Click(object sender, RoutedEventArgs e)
+        {
+            theCanvas.Children.Clear();
+            map = null;
+            map = new Map(theCanvas, scale, highlightHexagon, unhighlightHexagon);
+            firstPlaced = false;
         }
 
         private void FileExit_Click(object sender, RoutedEventArgs e)

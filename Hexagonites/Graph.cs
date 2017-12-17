@@ -46,7 +46,7 @@ namespace Hexagonites
         {
             get
             {
-                return graph.Count;
+                return graph2.Count;
             }
         }
 
@@ -60,7 +60,7 @@ namespace Hexagonites
         public void AddLoose()
         {
             graph.Add(new List<Point>()); //the new entry
-            graph2.Add(new Vertex());
+            graph2.Add(new Vertex(true));
             for (int i = 1; i <= 6; i++) //6 step loop, for 6 neighbor spots
             {
                 graph[graph.Count - 1].Add(new Point(-1, -1)); //(-1,-1) means that all neighbors are unknown yet
@@ -108,7 +108,7 @@ namespace Hexagonites
                 if(graph2[index].neighbors[i].X==-1) //The hexagon at [index] has no neighbor in direction [i]
                 {
                     AddLoose(); // creates an actual new element in the (graph)list
-                    newIndex = graph.Count - 1; //the index of this new element
+                    newIndex = graph2.Count - 1; //the index of this new element
                     oldY = graph[index][i].Y; //travelcost for [index][i] is saved here
                     oldY = graph2[index].neighbors[i].Y; //travelcost for [index].neighbors[i] is saved here
 
